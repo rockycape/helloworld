@@ -1,17 +1,17 @@
 # In this updated version, I've created a Pydantic model BaseConversionInput to validate and handle the input parameters.
 # The convert_base function now takes an instance of this model as its input.
-# The validator is used to ensure that the base values are between 2 and 36.
+# The field_validator is used to ensure that the base values are between 2 and 36.
 # The main part of the code then uses this model to get user input and calls the convert_base function with the validated input.
 # If there is a validation error, it catches the ValidationError and prints an error message.
 
-from pydantic import BaseModel, ValidationError, validator
+from pydantic import BaseModel, ValidationError, field_validator
 
 class BaseConversionInput(BaseModel):
     number: str
     from_base: int
     to_base: int
 
-    @validator('from_base', 'to_base')
+    @field_validator('from_base', 'to_base')
     def check_base_range(cls, value):
         if not (2 <= value <= 36):
             raise ValueError("Base must be between 2 and 36")
@@ -32,9 +32,9 @@ if __name__ == "__main__":
     try:
         # Get input from the user using Pydantic model
         input_data = BaseConversionInput.parse_obj({
-            "number": input("Enter the number: "),
-            "from_base": int(input("Enter the base of the input number (2-36): ")),
-            "to_base": int(input("Enter the base to convert to (2-36): "))
+            "number": input("Enter the starting number: "),
+            "from_base": int(input("Enter the base of the starting number  (2-36): ")),
+            "to_base": int(input("Enter the base of the number you want to convert to (2-36): "))
         })
 
         # Convert to the specified base

@@ -1,3 +1,9 @@
+# In this updated version, I've created a Pydantic model BaseConversionInput to validate and handle the input parameters.
+# The convert_base function now takes an instance of this model as its input.
+# The validator is used to ensure that the base values are between 2 and 36.
+# The main part of the code then uses this model to get user input and calls the convert_base function with the validated input.
+# If there is a validation error, it catches the ValidationError and prints an error message.
+
 from pydantic import BaseModel, ValidationError, validator
 
 class BaseConversionInput(BaseModel):

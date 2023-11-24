@@ -1,60 +1,27 @@
-from typing import Any, List, Optional
-
-from pydantic import BaseModel, Field, Json
+from pydantic import ValidationError, validate_call
 
 
-class BarModel(BaseModel):
-    whatever: int
+@validate_call
+def repeat(s: str, count: int, *, separator: bytes = b'') -> bytes:
+    b = s.encode()
+    return separator.join(b for _ in range(count))
 
 
-class FooBarModel(BaseModel):
-    banana: Optional[float] = 1.1
-    foo: str = Field(serialization_alias='foo_alias')
-    bar: BarModel
+a = repeat('hello', 3)
+print(a)
+#> b'hellohellohello'
 
+b = repeat('x', '4', separator=b' ')
+print(b)
+#> b'x x x x'
 
-m = FooBarModel(banana=3.14, foo='hello', bar={'whatever': 123})
+try:
+    c = repeat('hello', 'wrong')
+except ValidationError as exc:
+    print(exc)
+    """
+    1 validation error for repeat
+    1
+      Input should be a valid integer, unable to parse string as an integer [type=int_parsing, input_value='wrong', input_type=str]
+    """
 
-# returns a dictionary:
-print(m.model_dump())
-#> {'banana': 3.14, 'foo': 'hello', 'bar': {'whatever': 123}}
-print(m.model_dump(include={'foo', 'bar'}))
-#> {'foo': 'hello', 'bar': {'whatever': 123}}
-print(m.model_dump(exclude={'foo', 'bar'}))
-#> {'banana': 3.14}
-print(m.model_dump(by_alias=True))
-#> {'banana': 3.14, 'foo_alias': 'hello', 'bar': {'whatever': 123}}
-print(
-    FooBarModel(foo='hello', bar={'whatever': 123}).model_dump(
-        exclude_unset=True
-    )
-)
-#> {'foo': 'hello', 'bar': {'whatever': 123}}
-print(
-    FooBarModel(banana=1.1, foo='hello', bar={'whatever': 123}).model_dump(
-        exclude_defaults=True
-    )
-)
-#> {'foo': 'hello', 'bar': {'whatever': 123}}
-print(
-    FooBarModel(foo='hello', bar={'whatever': 123}).model_dump(
-        exclude_defaults=True
-    )
-)
-#> {'foo': 'hello', 'bar': {'whatever': 123}}
-print(
-    FooBarModel(banana=None, foo='hello', bar={'whatever': 123}).model_dump(
-        exclude_none=True
-    )
-)
-#> {'foo': 'hello', 'bar': {'whatever': 123}}
-
-
-class Model(BaseModel):
-    x: List[Json[Any]]
-
-
-print(Model(x=['{"a": 1}', '[1, 2]']).model_dump())
-#> {'x': [{'a': 1}, [1, 2]]}
-print(Model(x=['{"a": 1}', '[1, 2]']).model_dump(round_trip=True))
-#> {'x': ['{"a":1}', '[1,2]']}

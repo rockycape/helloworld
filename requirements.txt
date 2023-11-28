@@ -6,4 +6,6 @@
 # icecream - Do you ever use print() or log() to debug your code?
 # ic() makes print debugging your variables or expressions a little sweeter.
 # 
-pydantic  
+pydantic
+email-validator
+

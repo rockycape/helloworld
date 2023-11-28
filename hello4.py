@@ -2,7 +2,7 @@ from typing import Annotated, Dict, List, Literal, Tuple
 
 from annotated_types import Gt
 
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 class User(BaseModel):
     name: str
@@ -11,10 +11,9 @@ class User(BaseModel):
 
 
 print(
-    Fruit(
+    User(
         name='Apple',
-        color='red',
-        weight=4.2,
-        bazam={'foobar': [(1, True, 0.1)]},
+        email='apple@apple.com',
+        account_id=1234,
     )
 )

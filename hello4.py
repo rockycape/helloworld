@@ -2,7 +2,7 @@ from typing import Annotated, Dict, List, Literal, Tuple
 
 from annotated_types import Gt
 
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, EmailStr, field_validator
 
 class User(BaseModel):
     name: str

@@ -9,7 +9,6 @@ class User(BaseModel):
     email: EmailStr
     account_id:int
 
-
 print(
     User(
         name='Apple',

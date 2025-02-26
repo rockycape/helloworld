@@ -31,7 +31,7 @@ def convert_base(input_data: BaseConversionInput) -> str:
 if __name__ == "__main__":
     try:
         # Get input from the user using Pydantic model
-        input_data = BaseConversionInput.parse_obj({
+        input_data = BaseConversionInput.model_validate({
             "number": input("Enter the starting number: "),
             "from_base": int(input("Enter the base of the starting number  (2-36): ")),
             "to_base": int(input("Enter the base of the number you want to convert to (2-36): "))
